@@ -1,0 +1,88 @@
+---
+# netbox_dhcp_schema.yaml
+#
+# The tags and custom fields the sync scripts expect to find in netbox.
+# Feed the whole file to the ansible playbook:
+#
+#   ansible-playbook playbooks/provision_netbox_schema.yml -e @netbox_dhcp_schema.yaml
+#
+# or copy/paste the individual blocks into the netbox import UI if ansible
+# isnt your thing, whatever floats your boat. See the README for both options.
+
+tags:
+  - name: cisco-ios-dhcp-pool
+    slug: cisco-ios-dhcp-pool
+    color: "2196f3"
+    description: "DHCP pool imported from a Cisco IOS XE router"
+
+  - name: cisco-ios-dhcp-lease
+    slug: cisco-ios-dhcp-lease
+    color: "ff9800"
+    description: "Dynamic DHCP lease learned from a Cisco IOS XE router"
+
+# all of these land on the ipam.prefix object type
+custom_fields:
+  - name: ios_dhcp_pool_name
+    label: "IOS DHCP Pool Name"
+    type: text
+    object_types: ["ipam.prefix"]
+    description: "Name of the dhcp pool on the source router"
+
+  - name: ios_dhcp_source_router
+    label: "IOS DHCP Source Router"
+    type: text
+    object_types: ["ipam.prefix"]
+    description: "Management address of the router this pool came from"
+
+  - name: ios_dhcp_default_routers
+    label: "IOS DHCP Default Routers"
+    type: text
+    object_types: ["ipam.prefix"]
+    description: "default-router entries from the pool (v4 only, v6 gets its gateway from RAs)"
+
+  - name: ios_dhcp_dns_servers
+    label: "IOS DHCP DNS Servers"
+    type: text
+    object_types: ["ipam.prefix"]
+    description: "dns-server entries from the pool"
+
+  - name: ios_dhcp_domain_name
+    label: "IOS DHCP Domain Name"
+    type: text
+    object_types: ["ipam.prefix"]
+    description: "domain-name from the pool"
+
+  - name: ios_dhcp_ntp_servers
+    label: "IOS DHCP NTP Servers"
+    type: text
+    object_types: ["ipam.prefix"]
+    description: "NTP servers handed out by the pool (option 42 on v4, sntp address on v6)"
+
+  - name: ios_dhcp_lease_time
+    label: "IOS DHCP Lease Time"
+    type: text
+    object_types: ["ipam.prefix"]
+    description: "Lease/lifetime settings from the pool, kept verbatim"
+
+  - name: ios_dhcp_options
+    label: "IOS DHCP Options"
+    type: longtext
+    object_types: ["ipam.prefix"]
+    description: "Any other pool config lines (raw option statements, netbios-name-server, bootfile etc) kept verbatim so nothing gets lost in the move"
+  - name: ios_dhcp_total_addresses
+    label: "IOS DHCP Total Addresses"
+    type: integer
+    object_types: ["ipam.prefix"]
+    description: "Total addresses in the pool at import time"
+
+  - name: ios_dhcp_leased_addresses
+    label: "IOS DHCP Leased Addresses"
+    type: integer
+    object_types: ["ipam.prefix"]
+    description: "Leased addresses / active clients at import time"
+
+  - name: ios_dhcp_excluded_addresses
+    label: "IOS DHCP Excluded Addresses"
+    type: integer
+    object_types: ["ipam.prefix"]
+    description: "Excluded address count at import time"

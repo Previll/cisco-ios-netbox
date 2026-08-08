@@ -1,0 +1,46 @@
+---
+# provision_netbox_schema.yml
+#
+# Pushes the tags and custom fields from netbox_dhcp_schema.yaml into netbox
+# using the official netbox.netbox collection. Run it like so:
+#
+#   ansible-playbook playbooks/provision_netbox_schema.yml -e @netbox_dhcp_schema.yaml
+#
+# NETBOX_URL and NETBOX_TOKEN need to be exported in your shell first, same
+# as for the python scripts.
+#
+# Gotcha: older versions of the netbox.netbox collection call the custom field
+# target "content_types" instead of "object_types" (they renamed it around the
+# netbox 4.x release), so if the custom fields task falls over on that, either
+# update the collection or rename the key below.
+
+- name: Provision netbox schema for cisco ios xe dhcp sync
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Create the tags
+      netbox.netbox.netbox_tag:
+        netbox_url: "{{ lookup('env', 'NETBOX_URL') }}"
+        netbox_token: "{{ lookup('env', 'NETBOX_TOKEN') }}"
+        data:
+          name: "{{ item.name }}"
+          slug: "{{ item.slug }}"
+          color: "{{ item.color }}"
+          description: "{{ item.description }}"
+        state: present
+      loop: "{{ tags }}"
+
+    - name: Create the custom fields
+      netbox.netbox.netbox_custom_field:
+        netbox_url: "{{ lookup('env', 'NETBOX_URL') }}"
+        netbox_token: "{{ lookup('env', 'NETBOX_TOKEN') }}"
+        data:
+          name: "{{ item.name }}"
+          label: "{{ item.label }}"
+          type: "{{ item.type }}"
+          object_types: "{{ item.object_types }}"
+          description: "{{ item.description }}"
+        state: present
+      loop: "{{ custom_fields }}"
