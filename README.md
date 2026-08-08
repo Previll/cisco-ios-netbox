@@ -2,10 +2,10 @@
 These python scripts allow you to synchronize data from Cisco IOS XE routers built-in DHCP servers for two use cases:
 
 ## Use Case #1: Migrating from Cisco IOS XE DHCP Pools to Netbox
-Import the existing DHCP Pool configuration from IOS XE Devices for the purpose of migrating to Netbox 
+Import the existing DHCP and DHCPv6 Pool configuration from IOS XE Devices for the purpose of migrating to Netbox 
 
 ## Use Case #2: Visibility for Router-Assigned DHCP Clients (Dynamic Leases)
-Ensure DHCP Clients served by IOS DHCP Servers are correctly populated in the NetBox Prefix Utilization and IP Address views/layouts.
+Ensure DHCP and DHCPv6 Clients served by IOS DHCP Servers are correctly populated in the NetBox Prefix Utilization and IP Address views/layouts. There is no support for importing stateless DHCPv6 at this time. 
 
 ## Requirements
 ### Python
@@ -44,7 +44,7 @@ If you do not use Ansible, you can import these structures directly into the Net
 * `NETBOX_TOKEN`: Netbox API Token
 * `ROUTER_IP_ADDRESS_FILE_PATH`: File path to a list of IPv4/IPv6 addresses
 * `ROUTER_SSH_ID_FILE_PATH`: Local path to the private SSH key file (e.g., `~/.ssh/id_rsa`) used for public-key authentication to the router.
-* `ROUTER_USERNAME`: Username able to login to the provided list of routers and has permission to run required show dhcp commands (script avoids use of show run) 
+* `ROUTER_USERNAME`: Username able to login to the provided list of routers and has either show run permission (Use case #1) or show ip dhcp permission (Use case #2)
 * `ROUTER_PASSWORD`: (Optional) We strongly recommend the use of an ssh ID file with pubkey authentication, but this option is also available. 
 * `ROUTER_IP_ADDRESS_FILE_PATH`: File path to a list of IPv4/IPv6 addresses
 
